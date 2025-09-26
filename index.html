@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparativa de Bioquímica 2024-2025</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuración de la fuente Inter y un fondo suave */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* Estilo para filas impares para mejor legibilidad */
+        .table-row-odd {
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        /* Estilo para filas pares */
+        .table-row-even {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto bg-white shadow-2xl rounded-xl p-6 md:p-10">
+
+        <!-- Encabezado Principal -->
+        <header class="mb-8">
+            <h1 class="text-4xl font-extrabold text-blue-800 mb-2">
+                Comparativa: Carrera de Bioquímica
+            </h1>
+            <p class="text-lg text-gray-600">
+                Detalles académicos, costos y ponderaciones de 12 universidades (Datos 2024/2025). Haz clic en el nombre de la Universidad para ir a su sitio web.
+            </p>
+        </header>
+
+        <!-- Contenedor Responsivo de la Tabla -->
+        <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200">
+                
+                <!-- Encabezados de la Tabla -->
+                <thead class="bg-blue-600 text-white sticky top-0">
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Universidad</th>
+                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Sede / Región</th>
+                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Duración (Sem.)</th>
+                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Arancel Anual 2025</th>
+                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Matrícula 1er Año '24</th>
+                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Vacantes</th>
+                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap bg-blue-700">Prom. PAES 1er Año</th>
+                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Prom. NEM</th>
+                        <!-- Ponderaciones PAES -->
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. NEM</th>
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. Ranking</th>
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. Lenguaje</th>
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. M1</th>
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. M2</th>
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. Ciencias</th>
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. Historia</th>
+                        <!-- Origen Estudiantes -->
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">Mun. (%)</th>
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">Part. Subv. (%)</th>
+                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">Part. Pagado (%)</th>
+                    </tr>
+                </thead>
+                
+                <!-- Cuerpo de la Tabla (Datos) -->
+                <tbody class="divide-y divide-gray-100 text-gray-700">
+                    <!-- Fila 1: UNIVERSIDAD DE CHILE -->
+                    <tr class="table-row-even hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <a href="https://admisionuchile.cl/career/bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE CHILE</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">SANTIAGO / Metropolitana</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">11</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 5.967.900</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">50</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">39</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">822.8</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.8</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">22.0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">45.0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">33.0%</td>
+                    </tr>
+                    <!-- Fila 2: UNIVERSIDAD DE VIÑA DEL MAR -->
+                    <tr class="table-row-odd hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <a href="https://www.uvm.cl/bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE VIÑA DEL MAR</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Valparaíso</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.484.000</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">9</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">30</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">s/i</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">s/i</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">50%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">50%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">s/i</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">s/i</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">s/i</td>
+                    </tr>
+                    <!-- Fila 3: UNIVERSIDAD SAN SEBASTIAN -->
+                    <tr class="table-row-even hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <!-- El resultado 3.2 de la búsqueda de la USS proporciona un link de Bioquímica: http://www.uss.cl/medicina/carrera/bioquimica/malla-curricular/ -->
+                            <a href="http://www.uss.cl/medicina/carrera/bioquimica/malla-curricular/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD SAN SEBASTIAN</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">SEDE SANTIAGO / Metropolitana</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 6.103.500</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">68</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">80</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">665.2</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.1</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20.9%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">60.7%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15.4%</td>
+                    </tr>
+                    <!-- Fila 4: PONTIFICIA UC DE VALPARAISO -->
+                    <tr class="table-row-odd hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <a href="https://www.pucv.cl/pucv/pregrado/bioquimica" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">PONTIFICIA UC DE VALPARAISO</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">VALPARAISO / Valparaíso</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.968.000</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">73</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">60</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">675.2</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.3</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20.6%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">63.4%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15.1%</td>
+                    </tr>
+                    <!-- Fila 5: UNIVERSIDAD ANDRES BELLO -->
+                    <tr class="table-row-even hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                             <a href="https://facultades.unab.cl/cienciasdelavida/carrera/bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD ANDRES BELLO</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Metropolitana</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 6.160.000</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">63</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">65</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">695.6</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.2</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15.1%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">54.8%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">29.7%</td>
+                    </tr>
+                    <!-- Fila 6: UNIVERSIDAD DE TALCA -->
+                    <tr class="table-row-odd hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <a href="https://www.bioquimica.utalca.cl/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE TALCA</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Maule</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.925.000</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">46</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">50</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">685.6</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.5</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">35.6%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">56.5%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">7.9%</td>
+                    </tr>
+                    <!-- Fila 7: PONTIFICIA UC DE CHILE -->
+                    <tr class="table-row-even hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <a href="https://biologia.uc.cl/carrera-de-bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">PONTIFICIA UC DE CHILE</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Metropolitana</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 7.018.000</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">50</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">40</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">865.2</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.8</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">14.3%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">31.9%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">53.4%</td>
+                    </tr>
+                    <!-- Fila 8: UNIVERSIDAD DE CONCEPCION -->
+                    <tr class="table-row-odd hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <a href="https://admision.udec.cl/bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE CONCEPCION</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Biobío</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">12</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 5.809.366</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">53</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">54</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">793.3</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.6</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">35%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">23.0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">59.8%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">16.7%</td>
+                    </tr>
+                    <!-- Fila 9: UNIVERSIDAD DE LA FRONTERA -->
+                    <tr class="table-row-even hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <a href="https://icbioquimica.ufro.cl/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE LA FRONTERA</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / La Araucanía</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.949.000</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">31</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">30</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">712.7</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.4</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">40%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">31.6%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">60.6%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">7.1%</td>
+                    </tr>
+                    <!-- Fila 10: UNIVERSIDAD AUSTRAL DE CHILE -->
+                    <tr class="table-row-odd hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <!-- No se encontró un enlace directo a la carrera, se usará el sitio principal de la Facultad de Ciencias de la UACH, o un enlace de admisión si es posible. Se usará la URL del snippet 10.1 (aunque es de SBBCH, se asume que redirige o es un punto de contacto). Al no haber un enlace claro a la carrera, se dejará sin enlace para evitar confusiones, a menos que se encuentre uno mejor. Dejaremos sin enlace, ya que 10.1 y 10.2 no son páginas de la carrera. -->
+                            UNIVERSIDAD AUSTRAL DE CHILE
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Los Ríos</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.922.000</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">59</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">50</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">675.7</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.4</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">35%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">28.9%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">58.3%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">12.8%</td>
+                    </tr>
+                    <!-- Fila 11: UNIVERSIDAD DE ANTOFAGASTA -->
+                    <tr class="table-row-even hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <!-- El resultado 11.2 proporciona el sitio principal, ya que el 11.1 es de un centro de biotecnología. -->
+                            <a href="http://www.uantof.cl" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE ANTOFAGASTA</a>
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">CAMPUS COLOSO / Antofagasta</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 5.115.000</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">27</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">20</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">688.1</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.2</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">40%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">28.1%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">62.6%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">9.4%</td>
+                    </tr>
+                    <!-- Fila 12: UNIVERSIDAD DE SANTIAGO DE CHILE -->
+                    <tr class="table-row-odd hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
+                            <!-- Se usa el sitio principal de la carrera de Química y Biología de la USACH, ya que es la Facultad que alberga la carrera, si no se encuentra el enlace directo. Se dejará sin enlace ya que no se encontró el sitio oficial de la carrera de la USACH en los snippets. -->
+                            UNIVERSIDAD DE SANTIAGO DE CHILE
+                        </td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Metropolitana</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
+                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 6.059.000</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">51</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">40</td>
+                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">752.6</td>
+                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.6</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">40%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">29.5%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">55.0%</td>
+                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">14.3%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Leyenda / Notas -->
+        <footer class="mt-6 text-sm text-gray-500 border-t pt-4">
+            <p><span class="font-bold">Nota:</span> En dispositivos móviles, desplácese horizontalmente para ver todas las columnas.</p>
+            <p>P. M1/M2 = Ponderación Matemática 1 / Matemática 2.</p>
+            <p>s/i = Sin Información proporcionada. Las universidades sin enlace directo es porque no se encontró la URL específica de la carrera en la búsqueda.</p>
+        </footer>
+    </div>
+</body>
+</html>
