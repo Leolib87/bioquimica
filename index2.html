@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bioquimica : carreras en Chile</title>
+    <!-- Tailwind CSS para un diseño moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para los gráficos dinámicos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js Datalabels plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <!-- Google Fonts para una tipografía más agradable -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .metric-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+        .chart-container {
+            position: relative;
+            min-height: 350px;
+            width: 100%;
+        }
+        .no-data-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(31, 41, 55, 0.8);
+            color: #9ca3af;
+            font-size: 1.125rem;
+            border-radius: 0.75rem;
+            z-index: 10;
+        }
+        #indicators-table tbody tr {
+            transition: background-color 0.2s ease-in-out;
+        }
+        .highlight-row {
+            background-color: #374151; /* gray-700 */
+        }
+        .highlight-good {
+            color: #4ade80; /* green-400 */
+            font-weight: 600;
+        }
+        .highlight-bad {
+            color: #f87171; /* red-400 */
+            font-weight: 600;
+        }
+        /* Estilos para la presentación */
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .slide.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Encabezado del Dashboard -->
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-indigo-400">Bioquimica: Carreras en Chile</h1>
+            <p class="text-lg text-gray-400 mt-2">Análisis comparativo de universidades (Datos 2024/2025)</p>
+        </header>
+
+        <!-- Selector de Pestañas de Universidad -->
+        <div id="university-tabs-container" class="mb-8">
+            <div id="university-tabs" class="flex flex-wrap justify-center gap-1 border-b-2 border-gray-700 pb-2">
+                <!-- Las pestañas se generarán con JavaScript -->
+            </div>
+        </div>
+
+        <!-- Contenedor Principal de la Presentación -->
+        <div id="presentation-container" class="relative">
+            <main>
+                <!-- Slide 1: KPIs y Gráficos iniciales -->
+                <div class="slide active">
+                     <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Columna Izquierda: KPIs -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="metric-card bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                                <h3 class="text-lg font-semibold text-gray-400">Arancel Anual 2025</h3>
+                                <p id="arancel-anual" class="text-3xl font-bold text-indigo-400 mt-2">-</p>
+                            </div>
+                            <div class="metric-card bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                                <h3 class="text-lg font-semibold text-gray-400">Promedio PAES 1er Año</h3>
+                                <p id="promedio-paes" class="text-3xl font-bold text-indigo-400 mt-2">-</p>
+                            </div>
+                            <div class="metric-card bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                                <h3 class="text-lg font-semibold text-gray-400">Matrícula Total '24</h3>
+                                <p id="matricula-total" class="text-3xl font-bold text-indigo-400 mt-2">-</p>
+                            </div>
+                            <div class="metric-card bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                                <h3 class="text-lg font-semibold text-gray-400">Vacantes 2025</h3>
+                                <p id="vacantes" class="text-3xl font-bold text-indigo-400 mt-2">-</p>
+                            </div>
+                             <div class="metric-card sm:col-span-2 bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                                <h3 class="text-lg font-semibold text-gray-400">Sitio Web Carrera</h3>
+                                <a id="career-link" href="#" target="_blank" class="mt-2 text-indigo-400 hover:text-indigo-300 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                    <span class="mt-1 block text-sm">Visitar Sitio</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha: Gráficos de Admisión -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                            <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                                <h3 class="text-xl font-semibold mb-4 text-center">Ponderaciones de Admisión</h3>
+                                <div class="chart-container" style="min-height: 250px;">
+                                    <canvas id="ponderaciones-chart"></canvas>
+                                    <div id="ponderaciones-nodata" class="no-data-message hidden">No hay datos</div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                                <h3 class="text-xl font-semibold text-gray-400 mb-4 text-center">Origen Socioeconómico</h3>
+                                <div class="chart-container" style="min-height: 250px;">
+                                    <canvas id="origen-chart"></canvas>
+                                    <div id="origen-nodata" class="no-data-message hidden">No hay datos</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+                <!-- Slide 2: Comparativa General -->
+                <div class="slide">
+                    <section class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-semibold mb-4 text-center">Comparativa (Arancel vs. Puntaje PAES)</h3>
+                        <div class="chart-container" style="min-height: 65vh;">
+                            <canvas id="comparativa-chart"></canvas>
+                        </div>
+                    </section>
+                </div>
+                
+                <!-- Slide 3: Tabla Indicadores -->
+                <div class="slide">
+                    <section class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-semibold mb-4 text-center">Indicadores de Empleabilidad y Retención</h3>
+                        <div class="overflow-x-auto relative">
+                            <table id="indicators-table" class="w-full text-sm text-left text-gray-400">
+                                <thead class="text-xs text-gray-300 uppercase bg-gray-700">
+                                    <tr>
+                                        <th scope="col" class="py-3 px-6 rounded-l-lg">Institución</th>
+                                        <th scope="col" class="py-3 px-6 text-center">Continuidad (%)</th>
+                                        <th scope="col" class="py-3 px-6 text-center">Retención (%)</th>
+                                        <th scope="col" class="py-3 px-6 text-center">Duración (sem.)</th>
+                                        <th scope="col" class="py-3 px-6 text-center">Empleab. 1er Año (%)</th>
+                                        <th scope="col" class="py-3 px-6 text-center">Empleab. 2º Año (%)</th>
+                                        <th scope="col" class="py-3 px-6 rounded-r-lg">Ingreso 4º Año</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="indicators-table-body"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Slide 4: Gráficos Indicadores -->
+                <div class="slide">
+                    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-semibold mb-4 text-center">Retención 1er Año (%)</h3>
+                            <div class="chart-container" style="min-height: 300px;">
+                                <canvas id="retencion-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-semibold mb-4 text-center">Duración Real (semestres)</h3>
+                            <div class="chart-container" style="min-height: 300px;">
+                                <canvas id="duracion-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-semibold mb-4 text-center">Empleabilidad 1er Año (%)</h3>
+                            <div class="chart-container" style="min-height: 300px;">
+                                <canvas id="empleabilidad1-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-semibold mb-4 text-center">Empleabilidad 2º Año (%)</h3>
+                            <div class="chart-container" style="min-height: 300px;">
+                                <canvas id="empleabilidad2-chart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+             <!-- Navegación de la presentación -->
+            <div class="mt-8 flex justify-center items-center gap-8">
+                <button id="prev-slide" class="p-2 rounded-full bg-gray-700 hover:bg-indigo-500 text-white transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <div id="slide-indicators" class="flex gap-2"></div>
+                <button id="next-slide" class="p-2 rounded-full bg-gray-700 hover:bg-indigo-500 text-white transition disabled:opacity-50 disabled:cursor-not-allowed">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURACIÓN GLOBAL ---
+            Chart.register(ChartDataLabels);
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#d1d5db';
+            Chart.defaults.borderColor = '#4b5563';
+
+            // --- DATA STORE ---
+            const careerData = [
+                { "Universidad": "UNIVERSIDAD DE CHILE", "Link": "https://admisionuchile.cl/career/bioquimica/", "Región": "Metropolitana", "Duración (sem.)": 11, "Arancel Anual 2025": 5967900, "Matrícula Total '24": 101, "Matrícula 1er Año '24": 50, "Vacantes": 39, "Prom. PAES 1er Año": 822.8, "Prom. NEM": 6.8, "P. NEM": 10, "P. Ranking": 20, "P. Lenguaje": 10, "P. M1": 20, "P. M2": 10, "P. Ciencias": 30, "P. Historia": 0, "Origen Municipal (%)": 22.0, "Origen Part. Subv. (%)": 45.0, "Origen Part. Pagado (%)": 33.0 },
+                { "Universidad": "UNIVERSIDAD DE VIÑA DEL MAR", "Link": "https://www.uvm.cl/bioquimica/", "Región": "Valparaíso", "Duración (sem.)": 10, "Arancel Anual 2025": 4484000, "Matrícula Total '24": 10, "Matrícula 1er Año '24": 9, "Vacantes": 30, "Prom. PAES 1er Año": null, "Prom. NEM": null, "P. NEM": 0, "P. Ranking": 0, "P. Lenguaje": 50, "P. M1": 50, "P. M2": 0, "P. Ciencias": 0, "P. Historia": 0, "Origen Municipal (%)": null, "Origen Part. Subv. (%)": null, "Origen Part. Pagado (%)": null },
+                { "Universidad": "UNIVERSIDAD SAN SEBASTIAN", "Link": "http://www.uss.cl/medicina/carrera/bioquimica/malla-curricular/", "Región": "Metropolitana", "Duración (sem.)": 10, "Arancel Anual 2025": 6103500, "Matrícula Total '24": 203, "Matrícula 1er Año '24": 68, "Vacantes": 80, "Prom. PAES 1er Año": 665.2, "Prom. NEM": 6.1, "P. NEM": 20, "P. Ranking": 20, "P. Lenguaje": 25, "P. M1": 25, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 10, "Origen Municipal (%)": 20.9, "Origen Part. Subv. (%)": 60.7, "Origen Part. Pagado (%)": 15.4 },
+                { "Universidad": "PONTIFICIA UC DE VALPARAISO", "Link": "https://www.pucv.cl/pucv/pregrado/bioquimica", "Región": "Valparaíso", "Duración (sem.)": 10, "Arancel Anual 2025": 4968000, "Matrícula Total '24": 355, "Matrícula 1er Año '24": 73, "Vacantes": 60, "Prom. PAES 1er Año": 675.2, "Prom. NEM": 6.3, "P. NEM": 20, "P. Ranking": 20, "P. Lenguaje": 20, "P. M1": 30, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 10, "Origen Municipal (%)": 20.6, "Origen Part. Subv. (%)": 63.4, "Origen Part. Pagado (%)": 15.1 },
+                { "Universidad": "UNIVERSIDAD ANDRES BELLO", "Link": "https://facultades.unab.cl/cienciasdelavida/carrera/bioquimica/", "Región": "Metropolitana", "Duración (sem.)": 10, "Arancel Anual 2025": 6160000, "Matrícula Total '24": 283, "Matrícula 1er Año '24": 63, "Vacantes": 65, "Prom. PAES 1er Año": 695.6, "Prom. NEM": 6.2, "P. NEM": 20, "P. Ranking": 30, "P. Lenguaje": 10, "P. M1": 20, "P. M2": 0, "P. Ciencias": 20, "P. Historia": 0, "Origen Municipal (%)": 15.1, "Origen Part. Subv. (%)": 54.8, "Origen Part. Pagado (%)": 29.7 },
+                { "Universidad": "UNIVERSIDAD DE TALCA", "Link": "https://www.bioquimica.utalca.cl/", "Región": "Maule", "Duración (sem.)": 10, "Arancel Anual 2025": 4925000, "Matrícula Total '24": 179, "Matrícula 1er Año '24": 46, "Vacantes": 50, "Prom. PAES 1er Año": 685.6, "Prom. NEM": 6.5, "P. NEM": 20, "P. Ranking": 30, "P. Lenguaje": 10, "P. M1": 25, "P. M2": 0, "P. Ciencias": 15, "P. Historia": 0, "Origen Municipal (%)": 35.6, "Origen Part. Subv. (%)": 56.5, "Origen Part. Pagado (%)": 7.9 },
+                { "Universidad": "PONTIFICIA UC DE CHILE", "Link": "https://biologia.uc.cl/carrera-de-bioquimica/", "Región": "Metropolitana", "Duración (sem.)": 10, "Arancel Anual 2025": 7018000, "Matrícula Total '24": 310, "Matrícula 1er Año '24": 50, "Vacantes": 40, "Prom. PAES 1er Año": 865.2, "Prom. NEM": 6.8, "P. NEM": 20, "P. Ranking": 20, "P. Lenguaje": 10, "P. M1": 30, "P. M2": 0, "P. Ciencias": 20, "P. Historia": 0, "Origen Municipal (%)": 14.3, "Origen Part. Subv. (%)": 31.9, "Origen Part. Pagado (%)": 53.4 },
+                { "Universidad": "UNIVERSIDAD DE CONCEPCION", "Link": "https://admision.udec.cl/bioquimica/", "Región": "Biobío", "Duración (sem.)": 12, "Arancel Anual 2025": 5809366, "Matrícula Total '24": 398, "Matrícula 1er Año '24": 53, "Vacantes": 54, "Prom. PAES 1er Año": 793.3, "Prom. NEM": 6.6, "P. NEM": 15, "P. Ranking": 25, "P. Lenguaje": 15, "P. M1": 35, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 0, "Origen Municipal (%)": 23.0, "Origen Part. Subv. (%)": 59.8, "Origen Part. Pagado (%)": 16.7 },
+                { "Universidad": "UNIVERSIDAD DE LA FRONTERA", "Link": "https://icbioquimica.ufro.cl/", "Región": "La Araucanía", "Duración (sem.)": 10, "Arancel Anual 2025": 4949000, "Matrícula Total '24": 156, "Matrícula 1er Año '24": 31, "Vacantes": 30, "Prom. PAES 1er Año": 712.7, "Prom. NEM": 6.4, "P. NEM": 10, "P. Ranking": 40, "P. Lenguaje": 10, "P. M1": 25, "P. M2": 0, "P. Ciencias": 15, "P. Historia": 0, "Origen Municipal (%)": 31.6, "Origen Part. Subv. (%)": 60.6, "Origen Part. Pagado (%)": 7.1 },
+                { "Universidad": "UNIVERSIDAD AUSTRAL DE CHILE", "Link": null, "Región": "Los Ríos", "Duración (sem.)": 10, "Arancel Anual 2025": 4922000, "Matrícula Total '24": 238, "Matrícula 1er Año '24": 59, "Vacantes": 50, "Prom. PAES 1er Año": 675.7, "Prom. NEM": 6.4, "P. NEM": 10, "P. Ranking": 35, "P. Lenguaje": 15, "P. M1": 25, "P. M2": 0, "P. Ciencias": 15, "P. Historia": 0, "Origen Municipal (%)": 28.9, "Origen Part. Subv. (%)": 58.3, "Origen Part. Pagado (%)": 12.8 },
+                { "Universidad": "UNIVERSIDAD DE ANTOFAGASTA", "Link": "http://www.uantof.cl", "Región": "Antofagasta", "Duración (sem.)": 10, "Arancel Anual 2025": 5115000, "Matrícula Total '24": 142, "Matrícula 1er Año '24": 27, "Vacantes": 20, "Prom. PAES 1er Año": 688.1, "Prom. NEM": 6.2, "P. NEM": 10, "P. Ranking": 40, "P. Lenguaje": 20, "P. M1": 20, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 0, "Origen Municipal (%)": 28.1, "Origen Part. Subv. (%)": 62.6, "Origen Part. Pagado (%)": 9.4 },
+                { "Universidad": "UNIVERSIDAD DE SANTIAGO DE CHILE", "Link": null, "Región": "Metropolitana", "Duración (sem.)": 10, "Arancel Anual 2025": 6059000, "Matrícula Total '24": 255, "Matrícula 1er Año '24": 51, "Vacantes": 40, "Prom. PAES 1er Año": 752.6, "Prom. NEM": 6.6, "P. NEM": 10, "P. Ranking": 40, "P. Lenguaje": 15, "P. M1": 25, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 0, "Origen Municipal (%)": 29.5, "Origen Part. Subv. (%)": 55.0, "Origen Part. Pagado (%)": 14.3 }
+            ];
+            const indicatorsData = [
+                { keyName: "UNIVERSIDAD DE CHILE", "Institución": "U. de Chile", "Continuidad de Estudios": "22,5%", "Retención 1er Año": "90,4%", "Duración Real (sem.)": 17.1, "Empleabilidad 1er Año": "75,4%", "Empleabilidad 2º Año": "73,6%", "Ingreso 4º Año": "$1.4M - $1.5M" },
+                { keyName: "PONTIFICIA UC DE VALPARAISO", "Institución": "PUC de Valparaíso", "Continuidad de Estudios": "13,4%", "Retención 1er Año": "66,7%", "Duración Real (sem.)": 14.2, "Empleabilidad 1er Año": "74,5%", "Empleabilidad 2º Año": "70,6%", "Ingreso 4º Año": "s/i" },
+                { keyName: "PONTIFICIA UC DE CHILE", "Institución": "PUC de Chile", "Continuidad de Estudios": "16,7%", "Retención 1er Año": "89,6%", "Duración Real (sem.)": 14.5, "Empleabilidad 1er Año": "78,9%", "Empleabilidad 2º Año": "75,4%", "Ingreso 4º Año": "s/i" },
+                { keyName: "UNIVERSIDAD DE CONCEPCION", "Institución": "U. de Concepción", "Continuidad de Estudios": "34,1%", "Retención 1er Año": "76,4%", "Duración Real (sem.)": 16.6, "Empleabilidad 1er Año": "70,0%", "Empleabilidad 2º Año": "82,5%", "Ingreso 4º Año": "$1.4M - $1.5M" },
+                { keyName: "UNIVERSIDAD DE SANTIAGO DE CHILE", "Institución": "U. de Santiago de Chile", "Continuidad de Estudios": "14,9%", "Retención 1er Año": "70,8%", "Duración Real (sem.)": 13.1, "Empleabilidad 1er Año": "83,3%", "Empleabilidad 2º Año": "86,4%", "Ingreso 4º Año": "$1.3M - $1.4M" }
+            ];
+
+            // --- CHART INSTANCES & UI ELEMENTS ---
+            let charts = {};
+            const ui = {
+                kpi: {
+                    arancel: document.getElementById('arancel-anual'),
+                    paes: document.getElementById('promedio-paes'),
+                    matricula: document.getElementById('matricula-total'),
+                    vacantes: document.getElementById('vacantes'),
+                    careerLink: document.getElementById('career-link')
+                },
+                charts: {
+                    ponderaciones: { canvas: document.getElementById('ponderaciones-chart'), noData: document.getElementById('ponderaciones-nodata') },
+                    origen: { canvas: document.getElementById('origen-chart'), noData: document.getElementById('origen-nodata') },
+                    comparativa: { canvas: document.getElementById('comparativa-chart') },
+                    retencion: { canvas: document.getElementById('retencion-chart') },
+                    duracion: { canvas: document.getElementById('duracion-chart') },
+                    empleabilidad1: { canvas: document.getElementById('empleabilidad1-chart') },
+                    empleabilidad2: { canvas: document.getElementById('empleabilidad2-chart') }
+                },
+                indicatorsTableBody: document.getElementById('indicators-table-body'),
+            };
+
+            // --- PRESENTATION LOGIC ---
+            const slides = document.querySelectorAll('.slide');
+            const indicatorsContainer = document.getElementById('slide-indicators');
+            let currentSlide = 0;
+
+            const showSlide = (n) => {
+                slides.forEach(slide => slide.classList.remove('active'));
+                slides[n].classList.add('active');
+                
+                document.querySelectorAll('#slide-indicators .dot').forEach((dot, index) => {
+                    dot.classList.toggle('bg-indigo-500', index === n);
+                    dot.classList.toggle('bg-gray-600', index !== n);
+                });
+
+                document.getElementById('prev-slide').disabled = n === 0;
+                document.getElementById('next-slide').disabled = n === slides.length - 1;
+                currentSlide = n;
+            };
+
+            for(let i = 0; i < slides.length; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('dot', 'w-3', 'h-3', 'rounded-full', 'transition');
+                dot.onclick = () => showSlide(i);
+                indicatorsContainer.appendChild(dot);
+            }
+            document.getElementById('prev-slide').onclick = () => showSlide(currentSlide - 1);
+            document.getElementById('next-slide').onclick = () => showSlide(currentSlide + 1);
+            
+            // --- UTILITY FUNCTIONS ---
+            const formatCurrency = (v) => v ? new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(v) : 'N/I';
+            const formatNumber = (v) => v ? new Intl.NumberFormat('es-CL').format(v) : 'N/I';
+            const parsePercent = (str) => parseFloat(str.replace('%', '').replace(',', '.'));
+            
+            // --- RENDER FUNCTIONS ---
+            const renderKpisAndLink = (data) => {
+                ui.kpi.arancel.textContent = formatCurrency(data['Arancel Anual 2025']);
+                ui.kpi.paes.textContent = data['Prom. PAES 1er Año'] ? data['Prom. PAES 1er Año'].toFixed(1) : 'N/I';
+                ui.kpi.matricula.textContent = formatNumber(data["Matrícula Total '24"]);
+                ui.kpi.vacantes.textContent = formatNumber(data.Vacantes);
+                const linkElement = ui.kpi.careerLink, linkContainer = linkElement.parentElement;
+                if (data.Link) {
+                    linkElement.href = data.Link;
+                    linkContainer.classList.remove('opacity-50', 'cursor-not-allowed');
+                    linkElement.classList.remove('pointer-events-none');
+                } else {
+                    linkElement.href = '#';
+                    linkContainer.classList.add('opacity-50', 'cursor-not-allowed');
+                    linkElement.classList.add('pointer-events-none');
+                }
+            };
+
+            const manageChartVisibility = (chartUI, hasData) => {
+                chartUI.canvas.style.display = hasData ? 'block' : 'none';
+                chartUI.noData.style.display = hasData ? 'none' : 'flex';
+            };
+
+            const renderPonderacionesChart = (data) => {
+                const ponderacionesMap = { 'NEM': data['P. NEM'], 'Ranking': data['P. Ranking'], 'Lenguaje': data['P. Lenguaje'], 'M1': data['P. M1'], 'M2': data['P. M2'], 'Ciencias': data['P. Ciencias'], 'Historia': data['P. Historia'] };
+                const labels = Object.keys(ponderacionesMap).filter(key => ponderacionesMap[key] > 0);
+                const values = labels.map(key => ponderacionesMap[key]);
+                const hasData = values.length > 0 && values.some(v => v > 0);
+                manageChartVisibility(ui.charts.ponderaciones, hasData);
+                if (hasData) {
+                    charts.ponderaciones.data.labels = labels;
+                    charts.ponderaciones.data.datasets[0].data = values;
+                    charts.ponderaciones.update();
+                }
+            };
+            
+            const renderOrigenChart = (data) => {
+                const values = [data['Origen Municipal (%)'], data['Origen Part. Subv. (%)'], data['Origen Part. Pagado (%)']];
+                const hasData = !values.every(v => v === null);
+                manageChartVisibility(ui.charts.origen, hasData);
+                if (hasData) {
+                    charts.origen.data.datasets[0].data = values;
+                    charts.origen.update();
+                }
+            };
+            
+            const renderComparativaChart = (selectedUniversity) => {
+                const highlightColor = 'rgba(239, 68, 68, 0.8)', primaryColorArancel = 'rgba(20, 184, 166, 0.7)', primaryColorPaes = 'rgba(250, 204, 21, 0.7)';
+                charts.comparativa.data.datasets[0].backgroundColor = careerData.map(uni => uni.Universidad === selectedUniversity ? highlightColor : primaryColorArancel);
+                charts.comparativa.data.datasets[1].backgroundColor = careerData.map(uni => uni.Universidad === selectedUniversity ? highlightColor : primaryColorPaes);
+                charts.comparativa.update();
+            };
+
+            const renderIndicatorsTable = () => {
+                const tableBody = ui.indicatorsTableBody;
+                tableBody.innerHTML = ''; 
+                const stats = {}, columnsToAnalyze = ['Continuidad de Estudios', 'Retención 1er Año', 'Duración Real (sem.)', 'Empleabilidad 1er Año', 'Empleabilidad 2º Año'];
+                columnsToAnalyze.forEach(col => {
+                    const values = indicatorsData.map(d => typeof d[col] === 'string' && d[col].includes('%') ? parsePercent(d[col]) : d[col]).filter(v => typeof v === 'number' && !isNaN(v));
+                    if (values.length > 0) stats[col] = { min: Math.min(...values), max: Math.max(...values) };
+                });
+                indicatorsData.forEach(data => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-gray-700';
+                    row.dataset.key = data.keyName;
+                    let rowHTML = `<td class="py-4 px-6 font-medium whitespace-nowrap text-white">${data["Institución"]}</td>`;
+                    columnsToAnalyze.forEach(col => {
+                        const originalValue = data[col];
+                        let numericValue = typeof originalValue === 'string' && originalValue.includes('%') ? parsePercent(originalValue) : originalValue;
+                        let classes = 'py-4 px-6 text-center';
+                        if (stats[col] && typeof numericValue === 'number') {
+                            const isDuration = col === 'Duración Real (sem.)';
+                            if (numericValue === stats[col].max) classes += isDuration ? ' highlight-bad' : ' highlight-good';
+                            if (numericValue === stats[col].min) classes += isDuration ? ' highlight-good' : ' highlight-bad';
+                        }
+                        rowHTML += `<td class="${classes}">${originalValue}</td>`;
+                    });
+                    rowHTML += `<td class="py-4 px-6 whitespace-nowrap">${data["Ingreso 4º Año"]}</td>`;
+                    row.innerHTML = rowHTML;
+                    tableBody.appendChild(row);
+                });
+            };
+
+            const updateIndicatorsTable = (universityName) => {
+                ui.indicatorsTableBody.querySelectorAll('tr').forEach(row => row.classList.toggle('highlight-row', row.dataset.key === universityName));
+            };
+
+            const updateIndicatorBarCharts = (universityName) => {
+                const highlightColor = 'rgba(239, 68, 68, 0.8)';
+                const updateChartColor = (chart) => {
+                    if (!chart) return;
+                    chart.data.datasets[0].backgroundColor = indicatorsData.map(d => d.keyName === universityName ? highlightColor : chart.originalColor);
+                    chart.update();
+                };
+                ['retencion', 'duracion', 'empleabilidad1', 'empleabilidad2'].forEach(key => updateChartColor(charts[key]));
+            };
+
+            // --- MAIN UPDATE FUNCTION ---
+            const updateDashboard = (universityName) => {
+                const data = careerData.find(uni => uni.Universidad === universityName);
+                if (!data) return;
+                renderKpisAndLink(data);
+                renderPonderacionesChart(data);
+                renderOrigenChart(data);
+                renderComparativaChart(universityName);
+                updateIndicatorsTable(universityName);
+                updateIndicatorBarCharts(universityName);
+            };
+
+            // --- INITIALIZATION ---
+            const init = () => {
+                const tabsContainer = document.getElementById('university-tabs');
+                careerData.forEach((uni, index) => {
+                    const tabButton = document.createElement('button');
+                    tabButton.textContent = uni.Universidad.replace('UNIVERSIDAD DE ', 'U. ').replace('UNIVERSIDAD', 'U.').replace('PONTIFICIA UC DE ', 'PUC ');
+                    tabButton.dataset.university = uni.Universidad;
+                    tabButton.className = 'px-2 py-2 text-xs font-semibold rounded-t-lg transition-colors duration-200 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-400';
+                    tabButton.classList.add(index === 0 ? 'bg-gray-800' : 'text-gray-400', index === 0 ? 'text-indigo-400' : 'hover:bg-gray-700');
+                    tabButton.addEventListener('click', (e) => {
+                        tabsContainer.querySelectorAll('button').forEach(btn => {
+                            btn.classList.remove('bg-gray-800', 'text-indigo-400');
+                            btn.classList.add('text-gray-400', 'hover:bg-gray-700');
+                        });
+                        e.currentTarget.classList.add('bg-gray-800', 'text-indigo-400');
+                        e.currentTarget.classList.remove('text-gray-400', 'hover:bg-gray-700');
+                        updateDashboard(uni.Universidad);
+                    });
+                    tabsContainer.appendChild(tabButton);
+                });
+
+                renderIndicatorsTable();
+
+                charts.ponderaciones = new Chart(ui.charts.ponderaciones.canvas, { type: 'doughnut', data: { datasets: [{ backgroundColor: ['#4f46e5', '#7c3aed', '#a78bfa', '#c4b5fd', '#60a5fa', '#38bdf8', '#0ea5e9'], borderWidth: 4, borderColor: '#1f2937' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#d1d5db' } }, datalabels: { color: '#fff', font: { weight: 'bold' }, formatter: (v) => `${v}%` } } } });
+                charts.origen = new Chart(ui.charts.origen.canvas, { type: 'pie', data: { labels: ['Municipal', 'Part. Subv.', 'Part. Pagado'], datasets: [{ backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderWidth: 4, borderColor: '#1f2937' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#d1d5db' } }, datalabels: { color: '#fff', font: { weight: 'bold' }, formatter: (v) => v ? `${v.toFixed(1)}%` : '' } } } });
+                charts.comparativa = new Chart(ui.charts.comparativa.canvas, { type: 'bar', data: { labels: careerData.map(uni => uni.Universidad.replace('UNIVERSIDAD', 'U.').replace('PONTIFICIA UC', 'PUC')), datasets: [{ label: 'Arancel Anual', data: careerData.map(uni => uni['Arancel Anual 2025']), yAxisID: 'yArancel' }, { label: 'Promedio PAES', data: careerData.map(uni => uni['Prom. PAES 1er Año']), yAxisID: 'yPaes' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: false }, legend: { labels: { color: '#d1d5db' } }, tooltip: { callbacks: { label: (c) => `${c.dataset.label||''}: ${c.dataset.yAxisID==='yArancel'?formatCurrency(c.parsed.y):c.parsed.y.toFixed(1)}` } } }, scales: { x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45, font: { size: 10 }, color: '#d1d5db' } }, yArancel: { type: 'linear', position: 'left', title: { display: true, text: 'Arancel ($)', color: '#d1d5db' }, ticks: { callback: (v) => new Intl.NumberFormat('es-CL', { notation: 'compact' }).format(v), color: '#d1d5db' }, grid: { color: '#374151' } }, yPaes: { type: 'linear', position: 'right', title: { display: true, text: 'Puntaje PAES', color: '#d1d5db' }, grid: { drawOnChartArea: false }, suggestedMin: 500, ticks: { color: '#d1d5db' } } } } });
+
+                const createIndicatorBarChart = (canvas, label, data, color, unit = '%', axisLabel) => {
+                    const chart = new Chart(canvas, { type: 'bar', data: { labels: indicatorsData.map(d => d.Institución), datasets: [{ label, data, backgroundColor: color }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { datalabels: { anchor: 'end', align: 'right', color: '#fff', font: { weight: 'bold' }, formatter: (v) => v + unit }, legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${c.raw}${unit}` } } }, scales: { x: { title: { display: true, text: axisLabel || label, color: '#d1d5db' }, ticks: { color: '#d1d5db' }, grid: { color: '#4b5563' } }, y: { grid: { drawOnChartArea: false }, ticks: { color: '#d1d5db' } } } } });
+                    chart.originalColor = color;
+                    return chart;
+                };
+
+                charts.retencion = createIndicatorBarChart(ui.charts.retencion.canvas, 'Retención', indicatorsData.map(d => parsePercent(d['Retención 1er Año'])), 'rgba(99, 102, 241, 0.7)', '%');
+                charts.duracion = createIndicatorBarChart(ui.charts.duracion.canvas, 'Duración', indicatorsData.map(d => d['Duración Real (sem.)']), 'rgba(20, 184, 166, 0.7)', ' sem.', 'Semestres');
+                charts.empleabilidad1 = createIndicatorBarChart(ui.charts.empleabilidad1.canvas, 'Empleabilidad 1er Año', indicatorsData.map(d => parsePercent(d['Empleabilidad 1er Año'])), 'rgba(250, 204, 21, 0.7)', '%');
+                charts.empleabilidad2 = createIndicatorBarChart(ui.charts.empleabilidad2.canvas, 'Empleabilidad 2º Año', indicatorsData.map(d => parsePercent(d['Empleabilidad 2º Año'])), 'rgba(167, 139, 250, 0.7)', '%');
+                
+                showSlide(0);
+                updateDashboard(careerData[0].Universidad);
+            };
+
+            init();
+        });
+    </script>
+</body>
+</html>
+
