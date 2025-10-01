@@ -3,361 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparativa de Bioquímica 2024-2025</title>
-    <!-- Carga de Tailwind CSS -->
+    <title>Dashboard de Carrera - Bioquímica</title>
+    <!-- Tailwind CSS para un diseño moderno y responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para los gráficos dinámicos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js Datalabels plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <!-- Google Fonts para una tipografía más agradable -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Configuración de la fuente Inter y un fondo suave */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
         }
-        /* Estilo para filas impares para mejor legibilidad */
-        .table-row-odd {
-            background-color: #f1f5f9; /* slate-100 */
+        .metric-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-        /* Estilo para filas pares */
-        .table-row-even {
-            background-color: #ffffff;
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+        .chart-container {
+            position: relative;
+            min-height: 400px; /* Altura mínima para consistencia visual */
+        }
+        .no-data-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(31, 41, 55, 0.8);
+            color: #9ca3af;
+            font-size: 1.125rem;
+            border-radius: 0.75rem;
+            z-index: 10;
+        }
+        #indicators-table tbody tr {
+            transition: background-color 0.2s ease-in-out;
+        }
+        .highlight-row {
+            background-color: #374151; /* gray-700 */
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-gray-900 text-gray-200">
 
-    <div class="max-w-7xl mx-auto bg-white shadow-2xl rounded-xl p-6 md:p-10">
-
-        <!-- Encabezado Principal -->
-        <header class="mb-8">
-            <h1 class="text-4xl font-extrabold text-blue-800 mb-2">
-                Comparativa: Carrera de Bioquímica
-            </h1>
-            <p class="text-lg text-gray-600">
-                Detalles académicos, costos y ponderaciones de 12 universidades (Datos 2024/2025). Haz clic en el nombre de la Universidad para ir a su sitio web.
-            </p>
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Encabezado del Dashboard -->
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-indigo-400">Dashboard de Carrera: Bioquímica</h1>
+            <p class="text-lg text-gray-400 mt-2">Análisis comparativo de universidades (Datos 2024/2025)</p>
         </header>
 
-        <!-- Contenedor Responsivo de la Tabla -->
-        <div class="overflow-x-auto rounded-lg border border-gray-200">
-            <table class="min-w-full divide-y divide-gray-200">
-                
-                <!-- Encabezados de la Tabla -->
-                <thead class="bg-blue-600 text-white sticky top-0">
-                    <tr>
-                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Universidad</th>
-                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Sede / Región</th>
-                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Duración (Sem.)</th>
-                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Arancel Anual 2025</th>
-                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Matrícula 1er Año '24</th>
-                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Vacantes</th>
-                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap bg-blue-700">Prom. PAES 1er Año</th>
-                        <th scope="col" class="px-4 py-3 text-left text-sm font-semibold whitespace-nowrap">Prom. NEM</th>
-                        <!-- Ponderaciones PAES -->
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. NEM</th>
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. Ranking</th>
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. Lenguaje</th>
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. M1</th>
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. M2</th>
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. Ciencias</th>
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">P. Historia</th>
-                        <!-- Origen Estudiantes -->
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">Mun. (%)</th>
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">Part. Subv. (%)</th>
-                        <th scope="col" class="px-4 py-3 text-center text-xs font-semibold whitespace-nowrap">Part. Pagado (%)</th>
-                    </tr>
-                </thead>
-                
-                <!-- Cuerpo de la Tabla (Datos) -->
-                <tbody class="divide-y divide-gray-100 text-gray-700">
-                    <!-- Fila 1: UNIVERSIDAD DE CHILE -->
-                    <tr class="table-row-even hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <a href="https://admisionuchile.cl/career/bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE CHILE</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">SANTIAGO / Metropolitana</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">11</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 5.967.900</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">50</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">39</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">822.8</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.8</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">22.0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">45.0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">33.0%</td>
-                    </tr>
-                    <!-- Fila 2: UNIVERSIDAD DE VIÑA DEL MAR -->
-                    <tr class="table-row-odd hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <a href="https://www.uvm.cl/bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE VIÑA DEL MAR</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Valparaíso</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.484.000</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">9</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">30</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">s/i</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">s/i</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">50%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">50%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">s/i</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">s/i</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">s/i</td>
-                    </tr>
-                    <!-- Fila 3: UNIVERSIDAD SAN SEBASTIAN -->
-                    <tr class="table-row-even hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <!-- El resultado 3.2 de la búsqueda de la USS proporciona un link de Bioquímica: http://www.uss.cl/medicina/carrera/bioquimica/malla-curricular/ -->
-                            <a href="http://www.uss.cl/medicina/carrera/bioquimica/malla-curricular/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD SAN SEBASTIAN</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">SEDE SANTIAGO / Metropolitana</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 6.103.500</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">68</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">80</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">665.2</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.1</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20.9%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">60.7%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15.4%</td>
-                    </tr>
-                    <!-- Fila 4: PONTIFICIA UC DE VALPARAISO -->
-                    <tr class="table-row-odd hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <a href="https://www.pucv.cl/pucv/pregrado/bioquimica" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">PONTIFICIA UC DE VALPARAISO</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">VALPARAISO / Valparaíso</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.968.000</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">73</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">60</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">675.2</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.3</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20.6%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">63.4%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15.1%</td>
-                    </tr>
-                    <!-- Fila 5: UNIVERSIDAD ANDRES BELLO -->
-                    <tr class="table-row-even hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                             <a href="https://facultades.unab.cl/cienciasdelavida/carrera/bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD ANDRES BELLO</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Metropolitana</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 6.160.000</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">63</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">65</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">695.6</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.2</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15.1%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">54.8%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">29.7%</td>
-                    </tr>
-                    <!-- Fila 6: UNIVERSIDAD DE TALCA -->
-                    <tr class="table-row-odd hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <a href="https://www.bioquimica.utalca.cl/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE TALCA</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Maule</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.925.000</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">46</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">50</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">685.6</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.5</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">35.6%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">56.5%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">7.9%</td>
-                    </tr>
-                    <!-- Fila 7: PONTIFICIA UC DE CHILE -->
-                    <tr class="table-row-even hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <a href="https://biologia.uc.cl/carrera-de-bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">PONTIFICIA UC DE CHILE</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Metropolitana</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 7.018.000</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">50</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">40</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">865.2</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.8</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">30%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">14.3%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">31.9%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">53.4%</td>
-                    </tr>
-                    <!-- Fila 8: UNIVERSIDAD DE CONCEPCION -->
-                    <tr class="table-row-odd hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <a href="https://admision.udec.cl/bioquimica/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE CONCEPCION</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Biobío</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">12</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 5.809.366</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">53</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">54</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">793.3</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.6</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">35%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">23.0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">59.8%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">16.7%</td>
-                    </tr>
-                    <!-- Fila 9: UNIVERSIDAD DE LA FRONTERA -->
-                    <tr class="table-row-even hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <a href="https://icbioquimica.ufro.cl/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE LA FRONTERA</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / La Araucanía</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.949.000</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">31</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">30</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">712.7</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.4</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">40%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">31.6%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">60.6%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">7.1%</td>
-                    </tr>
-                    <!-- Fila 10: UNIVERSIDAD AUSTRAL DE CHILE -->
-                    <tr class="table-row-odd hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <!-- No se encontró un enlace directo a la carrera, se usará el sitio principal de la Facultad de Ciencias de la UACH, o un enlace de admisión si es posible. Se usará la URL del snippet 10.1 (aunque es de SBBCH, se asume que redirige o es un punto de contacto). Al no haber un enlace claro a la carrera, se dejará sin enlace para evitar confusiones, a menos que se encuentre uno mejor. Dejaremos sin enlace, ya que 10.1 y 10.2 no son páginas de la carrera. -->
-                            UNIVERSIDAD AUSTRAL DE CHILE
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Los Ríos</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 4.922.000</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">59</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">50</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">675.7</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.4</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">35%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">28.9%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">58.3%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">12.8%</td>
-                    </tr>
-                    <!-- Fila 11: UNIVERSIDAD DE ANTOFAGASTA -->
-                    <tr class="table-row-even hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <!-- El resultado 11.2 proporciona el sitio principal, ya que el 11.1 es de un centro de biotecnología. -->
-                            <a href="http://www.uantof.cl" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">UNIVERSIDAD DE ANTOFAGASTA</a>
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">CAMPUS COLOSO / Antofagasta</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 5.115.000</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">27</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">20</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">688.1</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.2</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">40%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">20%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">28.1%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">62.6%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">9.4%</td>
-                    </tr>
-                    <!-- Fila 12: UNIVERSIDAD DE SANTIAGO DE CHILE -->
-                    <tr class="table-row-odd hover:bg-blue-50">
-                        <td class="px-4 py-3 font-semibold whitespace-nowrap">
-                            <!-- Se usa el sitio principal de la carrera de Química y Biología de la USACH, ya que es la Facultad que alberga la carrera, si no se encuentra el enlace directo. Se dejará sin enlace ya que no se encontró el sitio oficial de la carrera de la USACH en los snippets. -->
-                            UNIVERSIDAD DE SANTIAGO DE CHILE
-                        </td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">CASA CENTRAL / Metropolitana</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">10</td>
-                        <td class="px-4 py-3 text-sm font-medium whitespace-nowrap text-green-700">$ 6.059.000</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">51</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">40</td>
-                        <td class="px-4 py-3 text-sm font-bold whitespace-nowrap bg-blue-50">752.6</td>
-                        <td class="px-4 py-3 text-sm whitespace-nowrap">6.6</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">40%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">15%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">25%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">10%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">29.5%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">55.0%</td>
-                        <td class="px-4 py-3 text-center text-xs whitespace-nowrap">14.3%</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Selector de Universidad -->
+        <div class="mb-8 max-w-2xl mx-auto">
+            <label for="university-select" class="block text-sm font-medium text-gray-400 mb-2">Selecciona una Universidad:</label>
+            <select id="university-select" class="block w-full p-3 bg-gray-800 border border-gray-600 text-white rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                <!-- Las opciones se poblarán con JavaScript -->
+            </select>
         </div>
 
-        <!-- Leyenda / Notas -->
-        <footer class="mt-6 text-sm text-gray-500 border-t pt-4">
-            <p><span class="font-bold">Nota:</span> En dispositivos móviles, desplácese horizontalmente para ver todas las columnas.</p>
-            <p>P. M1/M2 = Ponderación Matemática 1 / Matemática 2.</p>
-            <p>s/i = Sin Información proporcionada. Las universidades sin enlace directo es porque no se encontró la URL específica de la carrera en la búsqueda.</p>
-        </footer>
+        <!-- Contenedor Principal del Dashboard -->
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Tarjetas de Métricas Clave (KPIs) -->
+            <div class="metric-card bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                <h3 class="text-lg font-semibold text-gray-400">Arancel Anual 2025</h3>
+                <p id="arancel-anual" class="text-3xl font-bold text-indigo-400 mt-2">-</p>
+            </div>
+            <div class="metric-card bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                <h3 class="text-lg font-semibold text-gray-400">Promedio PAES 1er Año</h3>
+                <p id="promedio-paes" class="text-3xl font-bold text-indigo-400 mt-2">-</p>
+            </div>
+            <div class="metric-card bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                <h3 class="text-lg font-semibold text-gray-400">Matrícula Total '24</h3>
+                <p id="matricula-total" class="text-3xl font-bold text-indigo-400 mt-2">-</p>
+            </div>
+            <div class="metric-card bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                <h3 class="text-lg font-semibold text-gray-400">Vacantes 2025</h3>
+                <p id="vacantes" class="text-3xl font-bold text-indigo-400 mt-2">-</p>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg col-span-1 md:col-span-2">
+                <h3 class="text-xl font-semibold mb-4 text-center">Ponderaciones de Admisión</h3>
+                <div class="chart-container">
+                    <canvas id="ponderaciones-chart"></canvas>
+                    <div id="ponderaciones-nodata" class="no-data-message hidden">No hay datos de ponderación disponibles</div>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg col-span-1 md:col-span-2">
+                <h3 class="text-xl font-semibold text-gray-400">Origen Socioeconómico de Estudiantes</h3>
+                 <div class="chart-container">
+                    <canvas id="origen-chart"></canvas>
+                    <div id="origen-nodata" class="no-data-message hidden">No hay datos de origen disponibles</div>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg col-span-1 md:col-span-2 lg:col-span-4">
+                <h3 class="text-xl font-semibold mb-4 text-center">Comparativa de Universidades (Arancel vs. Puntaje PAES)</h3>
+                <div class="chart-container" style="min-height: 450px;">
+                    <canvas id="comparativa-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Tabla de Indicadores -->
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg col-span-1 md:col-span-2 lg:col-span-4">
+                <h3 class="text-xl font-semibold mb-4 text-center">Indicadores de Empleabilidad y Retención</h3>
+                <div class="overflow-x-auto relative">
+                    <table id="indicators-table" class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-gray-300 uppercase bg-gray-700">
+                            <tr>
+                                <th scope="col" class="py-3 px-6 rounded-l-lg">Institución</th>
+                                <th scope="col" class="py-3 px-6 text-center">Continuidad Estudios (%)</th>
+                                <th scope="col" class="py-3 px-6 text-center">Retención 1er Año (%)</th>
+                                <th scope="col" class="py-3 px-6 text-center">Duración Real (sem.)</th>
+                                <th scope="col" class="py-3 px-6 text-center">Empleab. 1er Año (%)</th>
+                                <th scope="col" class="py-3 px-6 text-center">Empleab. 2º Año (%)</th>
+                                <th scope="col" class="py-3 px-6 rounded-r-lg">Ingreso 4º Año</th>
+                            </tr>
+                        </thead>
+                        <tbody id="indicators-table-body">
+                           <!-- Las filas se inyectarán con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Gráficos de Barras de Indicadores -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-1 md:col-span-2 lg:col-span-4">
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Retención 1er Año (%)</h3>
+                    <div class="chart-container" style="min-height: 300px;">
+                        <canvas id="retencion-chart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Duración Real (semestres)</h3>
+                    <div class="chart-container" style="min-height: 300px;">
+                        <canvas id="duracion-chart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Empleabilidad 1er Año (%)</h3>
+                    <div class="chart-container" style="min-height: 300px;">
+                        <canvas id="empleabilidad1-chart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Empleabilidad 2º Año (%)</h3>
+                    <div class="chart-container" style="min-height: 300px;">
+                        <canvas id="empleabilidad2-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURACIÓN GLOBAL ---
+            Chart.register(ChartDataLabels);
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#d1d5db'; // Color de texto claro para los gráficos
+            Chart.defaults.borderColor = '#4b5563';
+
+            // --- DATA STORE ---
+            const careerData = [
+                { "Universidad": "UNIVERSIDAD DE CHILE", "Región": "Metropolitana", "Duración (sem.)": 11, "Arancel Anual 2025": 5967900, "Matrícula Total '24": 101, "Matrícula 1er Año '24": 50, "Vacantes": 39, "Prom. PAES 1er Año": 822.8, "Prom. NEM": 6.8, "P. NEM": 10, "P. Ranking": 20, "P. Lenguaje": 10, "P. M1": 20, "P. M2": 10, "P. Ciencias": 30, "P. Historia": 0, "Origen Municipal (%)": 22.0, "Origen Part. Subv. (%)": 45.0, "Origen Part. Pagado (%)": 33.0 },
+                { "Universidad": "UNIVERSIDAD DE VIÑA DEL MAR", "Región": "Valparaíso", "Duración (sem.)": 10, "Arancel Anual 2025": 4484000, "Matrícula Total '24": 10, "Matrícula 1er Año '24": 9, "Vacantes": 30, "Prom. PAES 1er Año": null, "Prom. NEM": null, "P. NEM": 0, "P. Ranking": 0, "P. Lenguaje": 50, "P. M1": 50, "P. M2": 0, "P. Ciencias": 0, "P. Historia": 0, "Origen Municipal (%)": null, "Origen Part. Subv. (%)": null, "Origen Part. Pagado (%)": null },
+                { "Universidad": "UNIVERSIDAD SAN SEBASTIAN", "Región": "Metropolitana", "Duración (sem.)": 10, "Arancel Anual 2025": 6103500, "Matrícula Total '24": 203, "Matrícula 1er Año '24": 68, "Vacantes": 80, "Prom. PAES 1er Año": 665.2, "Prom. NEM": 6.1, "P. NEM": 20, "P. Ranking": 20, "P. Lenguaje": 25, "P. M1": 25, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 10, "Origen Municipal (%)": 20.9, "Origen Part. Subv. (%)": 60.7, "Origen Part. Pagado (%)": 15.4 },
+                { "Universidad": "PONTIFICIA UC DE VALPARAISO", "Región": "Valparaíso", "Duración (sem.)": 10, "Arancel Anual 2025": 4968000, "Matrícula Total '24": 355, "Matrícula 1er Año '24": 73, "Vacantes": 60, "Prom. PAES 1er Año": 675.2, "Prom. NEM": 6.3, "P. NEM": 20, "P. Ranking": 20, "P. Lenguaje": 20, "P. M1": 30, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 10, "Origen Municipal (%)": 20.6, "Origen Part. Subv. (%)": 63.4, "Origen Part. Pagado (%)": 15.1 },
+                { "Universidad": "UNIVERSIDAD ANDRES BELLO", "Región": "Metropolitana", "Duración (sem.)": 10, "Arancel Anual 2025": 6160000, "Matrícula Total '24": 283, "Matrícula 1er Año '24": 63, "Vacantes": 65, "Prom. PAES 1er Año": 695.6, "Prom. NEM": 6.2, "P. NEM": 20, "P. Ranking": 30, "P. Lenguaje": 10, "P. M1": 20, "P. M2": 0, "P. Ciencias": 20, "P. Historia": 0, "Origen Municipal (%)": 15.1, "Origen Part. Subv. (%)": 54.8, "Origen Part. Pagado (%)": 29.7 },
+                { "Universidad": "UNIVERSIDAD DE TALCA", "Región": "Maule", "Duración (sem.)": 10, "Arancel Anual 2025": 4925000, "Matrícula Total '24": 179, "Matrícula 1er Año '24": 46, "Vacantes": 50, "Prom. PAES 1er Año": 685.6, "Prom. NEM": 6.5, "P. NEM": 20, "P. Ranking": 30, "P. Lenguaje": 10, "P. M1": 25, "P. M2": 0, "P. Ciencias": 15, "P. Historia": 0, "Origen Municipal (%)": 35.6, "Origen Part. Subv. (%)": 56.5, "Origen Part. Pagado (%)": 7.9 },
+                { "Universidad": "PONTIFICIA UC DE CHILE", "Región": "Metropolitana", "Duración (sem.)": 10, "Arancel Anual 2025": 7018000, "Matrícula Total '24": 310, "Matrícula 1er Año '24": 50, "Vacantes": 40, "Prom. PAES 1er Año": 865.2, "Prom. NEM": 6.8, "P. NEM": 20, "P. Ranking": 20, "P. Lenguaje": 10, "P. M1": 30, "P. M2": 0, "P. Ciencias": 20, "P. Historia": 0, "Origen Municipal (%)": 14.3, "Origen Part. Subv. (%)": 31.9, "Origen Part. Pagado (%)": 53.4 },
+                { "Universidad": "UNIVERSIDAD DE CONCEPCION", "Región": "Biobío", "Duración (sem.)": 12, "Arancel Anual 2025": 5809366, "Matrícula Total '24": 398, "Matrícula 1er Año '24": 53, "Vacantes": 54, "Prom. PAES 1er Año": 793.3, "Prom. NEM": 6.6, "P. NEM": 15, "P. Ranking": 25, "P. Lenguaje": 15, "P. M1": 35, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 0, "Origen Municipal (%)": 23.0, "Origen Part. Subv. (%)": 59.8, "Origen Part. Pagado (%)": 16.7 },
+                { "Universidad": "UNIVERSIDAD DE LA FRONTERA", "Región": "La Araucanía", "Duración (sem.)": 10, "Arancel Anual 2025": 4949000, "Matrícula Total '24": 156, "Matrícula 1er Año '24": 31, "Vacantes": 30, "Prom. PAES 1er Año": 712.7, "Prom. NEM": 6.4, "P. NEM": 10, "P. Ranking": 40, "P. Lenguaje": 10, "P. M1": 25, "P. M2": 0, "P. Ciencias": 15, "P. Historia": 0, "Origen Municipal (%)": 31.6, "Origen Part. Subv. (%)": 60.6, "Origen Part. Pagado (%)": 7.1 },
+                { "Universidad": "UNIVERSIDAD AUSTRAL DE CHILE", "Región": "Los Ríos", "Duración (sem.)": 10, "Arancel Anual 2025": 4922000, "Matrícula Total '24": 238, "Matrícula 1er Año '24": 59, "Vacantes": 50, "Prom. PAES 1er Año": 675.7, "Prom. NEM": 6.4, "P. NEM": 10, "P. Ranking": 35, "P. Lenguaje": 15, "P. M1": 25, "P. M2": 0, "P. Ciencias": 15, "P. Historia": 0, "Origen Municipal (%)": 28.9, "Origen Part. Subv. (%)": 58.3, "Origen Part. Pagado (%)": 12.8 },
+                { "Universidad": "UNIVERSIDAD DE ANTOFAGASTA", "Región": "Antofagasta", "Duración (sem.)": 10, "Arancel Anual 2025": 5115000, "Matrícula Total '24": 142, "Matrícula 1er Año '24": 27, "Vacantes": 20, "Prom. PAES 1er Año": 688.1, "Prom. NEM": 6.2, "P. NEM": 10, "P. Ranking": 40, "P. Lenguaje": 20, "P. M1": 20, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 0, "Origen Municipal (%)": 28.1, "Origen Part. Subv. (%)": 62.6, "Origen Part. Pagado (%)": 9.4 },
+                { "Universidad": "UNIVERSIDAD DE SANTIAGO DE CHILE", "Región": "Metropolitana", "Duración (sem.)": 10, "Arancel Anual 2025": 6059000, "Matrícula Total '24": 255, "Matrícula 1er Año '24": 51, "Vacantes": 40, "Prom. PAES 1er Año": 752.6, "Prom. NEM": 6.6, "P. NEM": 10, "P. Ranking": 40, "P. Lenguaje": 15, "P. M1": 25, "P. M2": 0, "P. Ciencias": 10, "P. Historia": 0, "Origen Municipal (%)": 29.5, "Origen Part. Subv. (%)": 55.0, "Origen Part. Pagado (%)": 14.3 }
+            ];
+
+            const indicatorsData = [
+                { keyName: "UNIVERSIDAD DE CHILE", "Institución": "U. de Chile", "Continuidad de Estudios": "22,5%", "Retención 1er Año": "90,4%", "Duración Real (sem.)": 17.1, "Empleabilidad 1er Año": "75,4%", "Empleabilidad 2º Año": "73,6%", "Ingreso 4º Año": "$1.4M - $1.5M" },
+                { keyName: "PONTIFICIA UC DE VALPARAISO", "Institución": "PUC de Valparaíso", "Continuidad de Estudios": "13,4%", "Retención 1er Año": "66,7%", "Duración Real (sem.)": 14.2, "Empleabilidad 1er Año": "74,5%", "Empleabilidad 2º Año": "70,6%", "Ingreso 4º Año": "s/i" },
+                { keyName: "PONTIFICIA UC DE CHILE", "Institución": "PUC de Chile", "Continuidad de Estudios": "16,7%", "Retención 1er Año": "89,6%", "Duración Real (sem.)": 14.5, "Empleabilidad 1er Año": "78,9%", "Empleabilidad 2º Año": "75,4%", "Ingreso 4º Año": "s/i" },
+                { keyName: "UNIVERSIDAD DE CONCEPCION", "Institución": "U. de Concepción", "Continuidad de Estudios": "34,1%", "Retención 1er Año": "76,4%", "Duración Real (sem.)": 16.6, "Empleabilidad 1er Año": "70,0%", "Empleabilidad 2º Año": "82,5%", "Ingreso 4º Año": "$1.4M - $1.5M" },
+                { keyName: "UNIVERSIDAD DE SANTIAGO DE CHILE", "Institución": "U. de Santiago de Chile", "Continuidad de Estudios": "14,9%", "Retención 1er Año": "70,8%", "Duración Real (sem.)": 13.1, "Empleabilidad 1er Año": "83,3%", "Empleabilidad 2º Año": "86,4%", "Ingreso 4º Año": "$1.3M - $1.4M" }
+            ];
+
+            // --- CHART INSTANCES ---
+            let charts = { ponderaciones: null, origen: null, comparativa: null, retencion: null, duracion: null, empleabilidad1: null, empleabilidad2: null };
+            
+            // --- UI ELEMENTS ---
+            const ui = {
+                select: document.getElementById('university-select'),
+                kpi: {
+                    arancel: document.getElementById('arancel-anual'),
+                    paes: document.getElementById('promedio-paes'),
+                    matricula: document.getElementById('matricula-total'),
+                    vacantes: document.getElementById('vacantes'),
+                },
+                charts: {
+                    ponderaciones: { canvas: document.getElementById('ponderaciones-chart'), noData: document.getElementById('ponderaciones-nodata') },
+                    origen: { canvas: document.getElementById('origen-chart'), noData: document.getElementById('origen-nodata') },
+                    comparativa: { canvas: document.getElementById('comparativa-chart') },
+                    retencion: { canvas: document.getElementById('retencion-chart') },
+                    duracion: { canvas: document.getElementById('duracion-chart') },
+                    empleabilidad1: { canvas: document.getElementById('empleabilidad1-chart') },
+                    empleabilidad2: { canvas: document.getElementById('empleabilidad2-chart') }
+                },
+                indicatorsTableBody: document.getElementById('indicators-table-body'),
+            };
+            
+            // --- UTILITY FUNCTIONS ---
+            const formatCurrency = (value) => (value === null || isNaN(value)) ? 'No informado' : new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
+            const formatNumber = (value) => (value === null || isNaN(value)) ? 'N/A' : new Intl.NumberFormat('es-CL').format(value);
+            const parsePercent = (str) => parseFloat(str.replace('%', '').replace(',', '.'));
+            
+            // --- RENDER FUNCTIONS ---
+            const renderKpis = (data) => {
+                ui.kpi.arancel.textContent = formatCurrency(data['Arancel Anual 2025']);
+                ui.kpi.paes.textContent = data['Prom. PAES 1er Año'] ? data['Prom. PAES 1er Año'].toFixed(1) : 'N/A';
+                ui.kpi.matricula.textContent = formatNumber(data["Matrícula Total '24"]);
+                ui.kpi.vacantes.textContent = formatNumber(data.Vacantes);
+            };
+
+            const manageChartVisibility = (chartUI, hasData) => {
+                if (hasData) {
+                    chartUI.canvas.classList.remove('hidden');
+                    chartUI.noData.classList.add('hidden');
+                } else {
+                    chartUI.canvas.classList.add('hidden');
+                    chartUI.noData.classList.remove('hidden');
+                }
+            };
+
+            const renderPonderacionesChart = (data) => {
+                const ponderacionesMap = { 'NEM': data['P. NEM'], 'Ranking': data['P. Ranking'], 'Lenguaje': data['P. Lenguaje'], 'M1': data['P. M1'], 'M2': data['P. M2'], 'Ciencias': data['P. Ciencias'], 'Historia': data['P. Historia'] };
+                const labels = Object.keys(ponderacionesMap).filter(key => ponderacionesMap[key] > 0);
+                const values = labels.map(key => ponderacionesMap[key]);
+                const hasData = values.length > 0 && values.some(v => v > 0);
+                
+                manageChartVisibility(ui.charts.ponderaciones, hasData);
+                
+                if (hasData) {
+                    charts.ponderaciones.data.labels = labels;
+                    charts.ponderaciones.data.datasets[0].data = values;
+                    charts.ponderaciones.update();
+                }
+            };
+            
+            const renderOrigenChart = (data) => {
+                const values = [data['Origen Municipal (%)'], data['Origen Part. Subv. (%)'], data['Origen Part. Pagado (%)']];
+                const hasData = !values.every(v => v === null);
+
+                manageChartVisibility(ui.charts.origen, hasData);
+                
+                if (hasData) {
+                    charts.origen.data.datasets[0].data = values;
+                    charts.origen.update();
+                }
+            };
+            
+            const renderComparativaChart = (selectedUniversity) => {
+                const highlightColor = 'rgba(239, 68, 68, 0.8)'; // red-500
+                const primaryColorArancel = 'rgba(20, 184, 166, 0.7)'; // teal-500
+                const primaryColorPaes = 'rgba(250, 204, 21, 0.7)'; // yellow-400
+
+                charts.comparativa.data.datasets[0].backgroundColor = careerData.map(uni => uni.Universidad === selectedUniversity ? highlightColor : primaryColorArancel);
+                charts.comparativa.data.datasets[1].backgroundColor = careerData.map(uni => uni.Universidad === selectedUniversity ? highlightColor : primaryColorPaes);
+                charts.comparativa.update();
+            };
+
+            const renderIndicatorsTable = () => {
+                const tableBody = ui.indicatorsTableBody;
+                tableBody.innerHTML = ''; // Limpiar datos previos
+                indicatorsData.forEach(data => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-gray-700';
+                    row.dataset.key = data.keyName;
+
+                    row.innerHTML = `
+                        <td class="py-4 px-6 font-medium whitespace-nowrap text-white">${data["Institución"]}</td>
+                        <td class="py-4 px-6 text-center">${data["Continuidad de Estudios"]}</td>
+                        <td class="py-4 px-6 text-center">${data["Retención 1er Año"]}</td>
+                        <td class="py-4 px-6 text-center">${data["Duración Real (sem.)"]}</td>
+                        <td class="py-4 px-6 text-center">${data["Empleabilidad 1er Año"]}</td>
+                        <td class="py-4 px-6 text-center">${data["Empleabilidad 2º Año"]}</td>
+                        <td class="py-4 px-6 whitespace-nowrap">${data["Ingreso 4º Año"]}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            };
+
+            const updateIndicatorsTable = (universityName) => {
+                const rows = ui.indicatorsTableBody.querySelectorAll('tr');
+                rows.forEach(row => {
+                    if (row.dataset.key === universityName) {
+                        row.classList.add('highlight-row');
+                    } else {
+                        row.classList.remove('highlight-row');
+                    }
+                });
+            };
+
+            const updateIndicatorBarCharts = (universityName) => {
+                const highlightColor = 'rgba(239, 68, 68, 0.8)'; // red-500
+                const primaryColor = 'rgba(96, 165, 250, 0.7)'; // blue-400
+
+                const updateChartColor = (chart) => {
+                    if (!chart) return;
+                    chart.data.datasets[0].backgroundColor = indicatorsData.map(d => d.keyName === universityName ? highlightColor : primaryColor);
+                    chart.update();
+                };
+
+                updateChartColor(charts.retencion);
+                updateChartColor(charts.duracion);
+                updateChartColor(charts.empleabilidad1);
+                updateChartColor(charts.empleabilidad2);
+            };
+
+
+            // --- MAIN UPDATE FUNCTION ---
+            const updateDashboard = (universityName) => {
+                const data = careerData.find(uni => uni.Universidad === universityName);
+                if (!data) return;
+
+                renderKpis(data);
+                renderPonderacionesChart(data);
+                renderOrigenChart(data);
+                renderComparativaChart(universityName);
+                updateIndicatorsTable(universityName);
+                updateIndicatorBarCharts(universityName);
+            };
+
+            // --- INITIALIZATION ---
+            const init = () => {
+                // Populate selector
+                careerData.forEach(uni => {
+                    const option = document.createElement('option');
+                    option.value = uni.Universidad;
+                    option.textContent = uni.Universidad;
+                    ui.select.appendChild(option);
+                });
+
+                // Render tables
+                renderIndicatorsTable();
+
+                // Initialize charts
+                charts.ponderaciones = new Chart(ui.charts.ponderaciones.canvas, { type: 'doughnut', data: { labels: [], datasets: [{ data: [], backgroundColor: ['#4f46e5', '#7c3aed', '#a78bfa', '#c4b5fd', '#60a5fa', '#38bdf8', '#0ea5e9'], borderWidth: 4, borderColor: '#1f2937' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#d1d5db' } }, datalabels: { color: '#fff', font: { weight: 'bold' }, formatter: (v) => `${v}%` } } } });
+                charts.origen = new Chart(ui.charts.origen.canvas, { type: 'pie', data: { labels: ['Municipal', 'Part. Subvencionado', 'Part. Pagado'], datasets: [{ data: [], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderWidth: 4, borderColor: '#1f2937' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#d1d5db' } }, datalabels: { color: '#fff', font: { weight: 'bold' }, formatter: (v) => v ? `${v.toFixed(1)}%` : '' } } } });
+                
+                charts.comparativa = new Chart(ui.charts.comparativa.canvas, {
+                    type: 'bar',
+                    data: {
+                        labels: careerData.map(uni => uni.Universidad.replace('UNIVERSIDAD', 'U.').replace('PONTIFICIA UC', 'PUC')),
+                        datasets: [
+                            { label: 'Arancel Anual', data: careerData.map(uni => uni['Arancel Anual 2025']), yAxisID: 'yArancel' },
+                            { label: 'Promedio PAES', data: careerData.map(uni => uni['Prom. PAES 1er Año']), yAxisID: 'yPaes' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: { display: false },
+                            legend: { labels: { color: '#d1d5db' } },
+                            tooltip: {
+                                callbacks: {
+                                    label: (c) => {
+                                        let label = c.dataset.label || '';
+                                        if (label) { label += ': ' };
+                                        if (c.parsed.y !== null) {
+                                            label += c.dataset.yAxisID === 'yArancel' ? formatCurrency(c.parsed.y) : c.parsed.y.toFixed(1);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45, font: { size: 10 }, color: '#d1d5db' } },
+                            yArancel: { type: 'linear', position: 'left', title: { display: true, text: 'Arancel Anual ($)', font: { weight: 'bold' }, color: '#d1d5db' }, ticks: { callback: (v) => new Intl.NumberFormat('es-CL', { notation: 'compact' }).format(v), color: '#d1d5db' }, grid: { color: '#374151' } },
+                            yPaes: { type: 'linear', position: 'right', title: { display: true, text: 'Puntaje PAES', font: { weight: 'bold' }, color: '#d1d5db' }, grid: { drawOnChartArea: false }, suggestedMin: 500, ticks: { color: '#d1d5db' } }
+                        }
+                    }
+                });
+
+                // Initialize new indicator bar charts
+                const createIndicatorBarChart = (canvas, label, data, unit = '%', axisLabel) => {
+                    return new Chart(canvas, {
+                        type: 'bar',
+                        data: {
+                            labels: indicatorsData.map(d => d.Institución),
+                            datasets: [{
+                                label: label,
+                                data: data,
+                                backgroundColor: 'rgba(96, 165, 250, 0.7)'
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                datalabels: {
+                                    anchor: 'end',
+                                    align: 'right',
+                                    color: '#fff',
+                                    font: { weight: 'bold' },
+                                    formatter: (v) => v + unit
+                                },
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (c) => `${c.dataset.label}: ${c.raw}${unit}`
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    title: { display: true, text: axisLabel || label, color: '#d1d5db' },
+                                    ticks: { color: '#d1d5db' },
+                                    grid: { color: '#4b5563' }
+                                },
+                                y: {
+                                    grid: { drawOnChartArea: false },
+                                    ticks: { color: '#d1d5db' }
+                                }
+                            }
+                        }
+                    });
+                };
+
+                charts.retencion = createIndicatorBarChart(
+                    ui.charts.retencion.canvas,
+                    'Retención',
+                    indicatorsData.map(d => parsePercent(d['Retención 1er Año'])),
+                    '%'
+                );
+
+                charts.duracion = createIndicatorBarChart(
+                    ui.charts.duracion.canvas,
+                    'Duración',
+                    indicatorsData.map(d => d['Duración Real (sem.)']),
+                    ' sem.',
+                    'Semestres'
+                );
+
+                charts.empleabilidad1 = createIndicatorBarChart(
+                    ui.charts.empleabilidad1.canvas,
+                    'Empleabilidad 1er Año',
+                    indicatorsData.map(d => parsePercent(d['Empleabilidad 1er Año'])),
+                    '%'
+                );
+
+                charts.empleabilidad2 = createIndicatorBarChart(
+                    ui.charts.empleabilidad2.canvas,
+                    'Empleabilidad 2º Año',
+                    indicatorsData.map(d => parsePercent(d['Empleabilidad 2º Año'])),
+                    '%'
+                );
+
+                // Setup event listener
+                ui.select.addEventListener('change', (e) => updateDashboard(e.target.value));
+
+                // Initial load
+                if (careerData.length > 0) {
+                    updateDashboard(careerData[0].Universidad);
+                }
+            };
+
+            // Run application
+            init();
+        });
+    </script>
 </body>
 </html>
+
